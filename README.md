@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# README.md
 
-## Getting Started
+# JobPortal - AI-Powered Hiring Platform
 
-First, run the development server:
+A production-ready, enterprise-level SaaS platform for modern hiring workflows with AI-powered resume matching.
 
+## 🚀 Features
+
+### For Candidates
+- AI-powered resume matching with job recommendations
+- Profile management with portfolio, skills, and experience
+- Job application tracking with status updates
+- Resume parsing and skill extraction
+- Saved jobs and job alerts
+- Interview scheduling
+- Real-time notifications
+
+### For Recruiters
+- Advanced job posting with requirements and benefits
+- Applicant tracking system (ATS) with Kanban board
+- AI-based candidate matching and filtering
+- Company branding and profile management
+- Analytics dashboard with hiring metrics
+- Interview scheduling and management
+
+### Admin Features
+- User management and moderation
+- Company verification
+- Platform analytics
+- Content moderation
+
+### Technical Features
+- 🎨 Modern UI with Tailwind CSS and Framer Motion
+- 🔐 Secure authentication with NextAuth.js
+- 📱 Fully responsive design
+- 🚀 Server-side rendering and optimization
+- 📊 Real-time updates with WebSockets
+- 🤖 AI-powered resume matching
+- 📧 Email notifications with Resend
+- ☁️ Cloudinary integration for file uploads
+- 🗄️ PostgreSQL with Prisma ORM
+- 🔄 Redis caching for performance
+- 📈 Analytics with Recharts
+
+## 🛠️ Tech Stack
+
+- **Framework**: Next.js 14 (App Router)
+- **Language**: TypeScript
+- **Database**: PostgreSQL with Prisma
+- **Authentication**: NextAuth.js (JWT)
+- **Styling**: Tailwind CSS + Shadcn UI
+- **Animations**: Framer Motion
+- **Forms**: React Hook Form + Zod
+- **State Management**: TanStack Query
+- **File Uploads**: Cloudinary
+- **Real-time**: Pusher
+- **Deployment**: Vercel
+
+## 📦 Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+git clone https://github.com/yourusername/jobportal.git
+cd jobportal

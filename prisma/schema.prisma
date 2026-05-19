@@ -1,0 +1,364 @@
+generator client {
+  provider = "prisma-client-js"
+    output   = "../generated/prisma/client" // Match this to your '@/' alias path
+
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id               String            @id @default(cuid())
+  email            String            @unique
+  password         String?
+  emailVerified    DateTime?
+  name             String?
+  image            String?
+  role             Role              @default(CANDIDATE)
+  isActive         Boolean           @default(true)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  companyId        String?
+  activityLogs     ActivityLog[]
+  applications     Application[]
+  candidateProfile CandidateProfile?
+  receivedMessages Message[]         @relation("ReceivedMessages")
+  sentMessages     Message[]         @relation("SentMessages")
+  notifications    Notification[]
+  profile          Profile?
+  savedJobs        SavedJob[]
+  company          Company?          @relation(fields: [companyId], references: [id])
+
+  @@index([email])
+  @@index([role])
+  @@index([companyId])
+}
+
+model Profile {
+  id       String  @id @default(cuid())
+  userId   String  @unique
+  phone    String?
+  location String?
+  bio      String?
+  website  String?
+  linkedin String?
+  github   String?
+  user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model CandidateProfile {
+  id             String          @id @default(cuid())
+  userId         String          @unique
+  title          String?
+  resumeUrl      String?
+  resumeName      String?         
+  resumeAnalyzed Boolean         @default(false)
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  education      Education[]
+  experience     Experience[]
+  portfolioLinks PortfolioLink[]
+  skills         Skill[]         @relation("CandidateSkills")
+}
+
+model Skill {
+  id         String             @id @default(cuid())
+  name       String             @unique
+  category   String?
+  candidates CandidateProfile[] @relation("CandidateSkills")
+  jobs       Job[]              @relation("JobSkills")
+
+  @@index([name])
+}
+
+model Experience {
+  id          String           @id @default(cuid())
+  candidateId String
+  title       String
+  company     String
+  location    String?
+  startDate   DateTime
+  endDate     DateTime?
+  current     Boolean          @default(false)
+  description String?
+  candidate   CandidateProfile @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+
+  @@index([candidateId])
+}
+
+model Education {
+  id          String           @id @default(cuid())
+  candidateId String
+  degree      String
+  institution String
+  field       String?
+  startDate   DateTime
+  endDate     DateTime?
+  current     Boolean          @default(false)
+  candidate   CandidateProfile @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+
+  @@index([candidateId])
+}
+
+model PortfolioLink {
+  id          String           @id @default(cuid())
+  candidateId String
+  title       String
+  url         String
+  candidate   CandidateProfile @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+
+  @@index([candidateId])
+}
+
+model Company {
+  id                 String            @id @default(cuid())
+  name               String            @unique
+  email              String?
+  phone              String?
+  logo               String?
+  website            String?
+  description        String?
+  industry           String?
+  size               String?
+  foundedYear        Int?
+  location           String?
+  address            String?
+  contactPerson      String?
+  contactDesignation String?
+  contactPhone       String?
+  panNumber          String?
+  isVerified         Boolean           @default(false)
+  isActive           Boolean           @default(true)
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  headquarters       String?
+  analytics          CompanyAnalytics?
+  jobs               Job[]
+  users              User[]
+
+  @@index([name])
+  @@index([isVerified])
+}
+
+model Job {
+  id                  String          @id @default(cuid())
+  title               String
+  companyId           String
+  description         String
+  requirements        String?
+  salaryMin           Int?
+  salaryMax           Int?
+  salaryCurrency      String          @default("NPR")
+  location            String
+  locationType        LocationType    @default(ONSITE)
+  employmentType      EmploymentType  @default(FULL_TIME)
+  experienceLevel     ExperienceLevel @default(MID)
+  benefits            String[]
+  applicationDeadline DateTime
+  isActive            Boolean         @default(true)
+  isFeatured          Boolean         @default(false)
+  views               Int             @default(0)
+  applicationsCount   Int             @default(0)
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  applications        Application[]
+  company             Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  savedBy             SavedJob[]
+  skills              Skill[]         @relation("JobSkills")
+
+  @@index([companyId])
+  @@index([title])
+  @@index([location])
+  @@index([isActive])
+  @@index([createdAt])
+}
+
+model Application {
+  id            String                 @id @default(cuid())
+  jobId         String
+  candidateId   String
+  status        ApplicationStatus      @default(APPLIED)
+  matchScore    Float?
+  resumeUrl     String?
+  coverLetter   String?
+  notes         String?
+  appliedAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
+  candidate     User                   @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  job           Job                    @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  statusHistory ApplicationStatusLog[]
+  interview     Interview?
+
+  @@unique([jobId, candidateId])
+  @@index([jobId])
+  @@index([candidateId])
+  @@index([status])
+  @@index([matchScore])
+}
+
+model ApplicationStatusLog {
+  id            String            @id @default(cuid())
+  applicationId String
+  status        ApplicationStatus
+  note          String?
+  changedBy     String?
+  createdAt     DateTime          @default(now())
+  application   Application       @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@index([applicationId])
+  @@index([createdAt])
+}
+
+model Interview {
+  id            String          @id @default(cuid())
+  applicationId String          @unique
+  scheduledFor  DateTime
+  duration      Int             @default(60)
+  type          InterviewType   @default(VIDEO)
+  meetingLink   String?
+  location      String?
+  notes         String?
+  status        InterviewStatus @default(SCHEDULED)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  application   Application     @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@index([applicationId])
+  @@index([scheduledFor])
+  @@index([status])
+}
+
+model SavedJob {
+  id      String   @id @default(cuid())
+  userId  String
+  jobId   String
+  savedAt DateTime @default(now())
+  job     Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, jobId])
+  @@index([userId])
+  @@index([jobId])
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType
+  title     String
+  message   String
+  read      Boolean          @default(false)
+  metadata  Json?
+  createdAt DateTime         @default(now())
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([read])
+  @@index([createdAt])
+}
+
+model Message {
+  id         String   @id @default(cuid())
+  senderId   String
+  receiverId String
+  content    String
+  read       Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
+  sender     User     @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([senderId])
+  @@index([receiverId])
+  @@index([createdAt])
+}
+
+model ActivityLog {
+  id        String   @id @default(cuid())
+  userId    String
+  action    String
+  details   Json?
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+}
+
+model CompanyAnalytics {
+  id                String   @id @default(cuid())
+  companyId         String   @unique
+  totalJobs         Int      @default(0)
+  totalApplications Int      @default(0)
+  totalHires        Int      @default(0)
+  averageMatchScore Float?   @default(0)
+  monthlyData       Json?
+  updatedAt         DateTime @updatedAt
+  company           Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+}
+
+enum Role {
+  CANDIDATE
+  RECRUITER
+  ADMIN
+}
+
+enum LocationType {
+  REMOTE
+  ONSITE
+  HYBRID
+}
+
+enum EmploymentType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  INTERNSHIP
+  FREELANCE
+}
+
+enum ExperienceLevel {
+  ENTRY
+  JUNIOR
+  MID
+  SENIOR
+  LEAD
+  EXECUTIVE
+}
+
+enum ApplicationStatus {
+  APPLIED
+  REVIEWING
+  SHORTLISTED
+  INTERVIEW_SCHEDULED
+  REJECTED
+  HIRED
+  WITHDRAWN
+}
+
+enum InterviewType {
+  PHONE
+  VIDEO
+  ONSITE
+  TECHNICAL
+}
+
+enum InterviewStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+  RESCHEDULED
+}
+
+enum NotificationType {
+  APPLICATION_UPDATE
+  INTERVIEW_SCHEDULED
+  JOB_SAVED
+  NEW_MESSAGE
+  JOB_ALERT
+  SYSTEM
+}
