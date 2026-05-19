@@ -1,12 +1,12 @@
-// components/dashboard/mobile-nav-wrapper.tsx - FIXED
+// components/dashboard/mobile-nav-wrapper.tsx - FIXED (No NextAuth)
 "use client"
-import dynamic from "next/dynamic"
-import { useSession } from "next-auth/react"
-import { MobileNav } from "./mobile-nav"
+
 import { useEffect, useState } from "react"
-// const  {MobileNav} = dynamic(() => import("./mobile-nav"), { ssr: false })
+import { useAuth } from "@/components/auth/auth-provider"
+import { MobileNav } from "./mobile-nav"
+
 export function MobileNavWrapper() {
-  const { data: session, status } = useSession()
+  const { user, isLoading } = useAuth()
   const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
@@ -16,11 +16,10 @@ export function MobileNavWrapper() {
     return () => window.removeEventListener("resize", checkMobile)
   }, [])
 
-  // Don't render if loading, not mobile, or no session
-  if (status === "loading") return null
+  // Don't render if loading, not mobile, or no user
+  if (isLoading) return null
   if (!isMobile) return null
-  if (!session?.user) return null
+  if (!user) return null
 
-  return <MobileNav userRole={session.user.role} />
+  return <MobileNav userRole={user.role} />
 }
-

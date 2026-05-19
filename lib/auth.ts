@@ -1,11 +1,9 @@
-
-
-// lib/auth.ts
+// lib/auth.ts - FIXED
 import { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
 import GitHubProvider from 'next-auth/providers/github'
-import { PrismaAdapter } from '@auth/prisma-adapter'
+import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import bcrypt from 'bcryptjs'
 import { prisma } from '@/lib/prisma'
 import { z } from 'zod'
@@ -16,7 +14,7 @@ const loginSchema = z.object({
 })
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma) as any,
+  adapter: PrismaAdapter(prisma as any) as NextAuthOptions['adapter'],
 
   providers: [
     GoogleProvider({
@@ -49,13 +47,19 @@ export const authOptions: NextAuthOptions = {
         const isValid = await bcrypt.compare(password, user.password)
         if (!isValid) return null
 
-        return { id: user.id, email: user.email, name: user.name, role: user.role, image: user.image }
+        return { 
+          id: user.id, 
+          email: user.email, 
+          name: user.name, 
+          role: user.role, 
+          image: user.image 
+        }
       },
     }),
   ],
 
   callbacks: {
-    async jwt({ token, user, account, trigger }) {
+    async jwt({ token, user, account }) {
       // Only update token when user first signs in
       if (user) {
         token.id = user.id
@@ -80,6 +84,7 @@ export const authOptions: NextAuthOptions = {
     },
 
     async session({ session, token }) {
+      // ✅ Fix: Add proper type checking
       if (session.user && token) {
         session.user.id = token.id as string
         session.user.role = token.role as string
@@ -118,7 +123,31 @@ export const authOptions: NextAuthOptions = {
     updateAge: 24 * 60 * 60,
   },
 
-  // ✅ CRITICAL: debug must be FALSE — true causes CLIENT_FETCH_ERROR loops
   debug: false,
   secret: process.env.NEXTAUTH_SECRET,
+}
+
+// ✅ Add type declaration for session
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string
+      role: string
+      name?: string | null
+      email?: string | null
+      image?: string | null
+    }
+  }
+  
+  interface User {
+    id: string
+    role: string
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    id?: string
+    role?: string
+  }
 }

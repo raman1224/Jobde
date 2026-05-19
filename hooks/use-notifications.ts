@@ -1,6 +1,6 @@
-// hooks/use-notifications.ts
-import { useEffect, useState } from "react"
-import { useSession } from "next-auth/react"
+// hooks/use-notifications.ts - FIXED (No NextAuth)
+import { useEffect, useState, useCallback } from "react"
+import { useAuth } from "@/components/auth/auth-provider"
 import { useSocket } from "@/components/providers/socket-provider"
 
 interface Notification {
@@ -13,33 +13,35 @@ interface Notification {
 }
 
 export function useNotifications() {
-  const { data: session } = useSession()
+  const { user } = useAuth()
   const { socket, isConnected } = useSocket()
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [unreadCount, setUnreadCount] = useState(0)
 
-  useEffect(() => {
-    if (!session?.user) return
-
-    // Fetch initial notifications
-    const fetchNotifications = async () => {
-      try {
-        const response = await fetch("/api/notifications")
-        const data = await response.json()
-        setNotifications(data)
-        setUnreadCount(data.filter((n: Notification) => !n.read).length)
-      } catch (error) {
-        console.error("Failed to fetch notifications:", error)
-      }
+  // Fetch initial notifications
+  const fetchNotifications = useCallback(async () => {
+    if (!user) return
+    
+    try {
+      const response = await fetch("/api/notifications")
+      const data = await response.json()
+      const notificationsArray = Array.isArray(data) ? data : []
+      setNotifications(notificationsArray)
+      setUnreadCount(notificationsArray.filter((n: Notification) => !n.read).length)
+    } catch (error) {
+      console.error("Failed to fetch notifications:", error)
     }
-
-    fetchNotifications()
-  }, [session])
+  }, [user])
 
   useEffect(() => {
-    if (!socket || !isConnected || !session?.user) return
+    fetchNotifications()
+  }, [fetchNotifications])
 
-    const channel = socket.subscribe(`user-${session.user.id}`)
+  // WebSocket connection for real-time notifications
+  useEffect(() => {
+    if (!socket || !isConnected || !user) return
+
+    const channel = socket.subscribe(`user-${user.id}`)
     
     channel.bind("new-notification", (notification: Notification) => {
       setNotifications((prev) => [notification, ...prev])
@@ -48,9 +50,9 @@ export function useNotifications() {
 
     return () => {
       channel.unbind("new-notification")
-      socket.unsubscribe(`user-${session.user.id}`)
+      socket.unsubscribe(`user-${user.id}`)
     }
-  }, [socket, isConnected, session])
+  }, [socket, isConnected, user])
 
   const markAsRead = async (notificationId: string) => {
     try {
@@ -85,5 +87,6 @@ export function useNotifications() {
     unreadCount,
     markAsRead,
     markAllAsRead,
+    refreshNotifications: fetchNotifications,
   }
 }

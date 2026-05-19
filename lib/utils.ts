@@ -1,7 +1,3 @@
-// cn()	merge Tailwind classes safely  p-4 or p-5
-// formatDate()	show readable dates 2026-04-28T10:22:00Z
-// formatCurrency()	show clean salary/money  4444444
-// truncateText()	shorten long text for UI  decrease long sentence
 
 // lib/utils.ts
 import { type ClassValue, clsx } from "clsx"

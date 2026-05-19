@@ -1,8 +1,8 @@
 // components/providers/auth-provider.tsx
 "use client"
 
-import { SessionProviderWrapper } from "./session-provider"
+import { AuthProvider as CustomAuthProvider } from "@/components/auth/auth-provider"
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  return <SessionProviderWrapper>{children}</SessionProviderWrapper>
+  return <CustomAuthProvider>{children}</CustomAuthProvider>
 }

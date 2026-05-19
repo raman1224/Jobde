@@ -1,26 +1,3 @@
-{/* <Tabs defaultValue="login">
-
-  <TabsList>
-
-    <TabsTrigger value="login">
-      Login
-    </TabsTrigger>
-
-    <TabsTrigger value="signup">
-      Signup
-    </TabsTrigger>
-
-  </TabsList>
-
-  <TabsContent value="login">
-    Login form
-  </TabsContent>
-
-  <TabsContent value="signup">
-    Signup form
-  </TabsContent>
-
-</Tabs> */}
 
 
 

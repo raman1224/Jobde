@@ -108,7 +108,8 @@ export function MobileNav({ userRole }: { userRole: string }) {
     </span>
 
   </motion.div>
-</Link>                  <button onClick={() => setIsOpen(false)} className="p-1 rounded-lg hover:bg-muted">
+</Link>  
+                <button onClick={() => setIsOpen(false)} className="p-1 rounded-lg hover:bg-muted">
                     <X className="h-5 w-5" />
                   </button>
                 </div>
