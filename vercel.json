@@ -1,4 +1,3 @@
-# vercel.json
 {
   "framework": "nextjs",
   "buildCommand": "prisma generate && next build",
