@@ -69,7 +69,22 @@ export function JobListings({ jobs, isLoading, title = "Featured Jobs", subtitle
       </section>
     )
   }
-
+//   if (jobs.length === 0) {
+//   <div className="text-center py-16">
+//     <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-slate-100 dark:bg-slate-800 mb-4">
+//       <Search className="h-10 w-10 text-slate-400" />
+//     </div>
+//     <h3 className="text-xl font-semibold mb-2">No jobs found</h3>
+//     <p className="text-slate-500 max-w-md mx-auto">
+//       We couldn't find any jobs matching "{searchQuery}" in "{locationFilter}". 
+//       Try adjusting your search or browse all jobs.
+//     </p>
+//     <Button onClick={clearFilters} className="mt-4 gap-2">
+//       <X className="h-4 w-4" />
+//       Clear Search
+//     </Button>
+//   </div>
+// }
   return (
     <section className="py-16 bg-slate-50 dark:bg-slate-900/50">
       <div className="container mx-auto px-4">

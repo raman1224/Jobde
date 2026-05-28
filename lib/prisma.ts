@@ -1,11 +1,7 @@
-
-// lib/prisma.ts
-// Prisma 7 + PostgreSQL (Neon) with pg adapter
-// Uses connection pooling URL for runtime queries
-
-import { PrismaClient } from '@/generated/prisma/client'
+// import { PrismaClient } from '@/generated/prisma/client'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { Pool } from 'pg'
+import { PrismaClient } from '@prisma/client'
 
 declare global {
   // eslint-disable-next-line no-var

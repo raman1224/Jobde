@@ -29,7 +29,11 @@ export function middleware(request: NextRequest) {
     response.cookies.delete('auth_token')
     return response
   }
-  
+    // ✅ Admin-only routes protection
+  if (pathname.startsWith('/admin') && payload.role !== 'ADMIN') {
+    return NextResponse.redirect(new URL('/dashboard/candidate', request.url))
+  }
+
   // Role-based routing
   if (pathname.startsWith('/recruiter') && payload.role !== 'RECRUITER') {
     return NextResponse.redirect(new URL('/dashboard/candidate', request.url))

@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-    output   = "../generated/prisma/client" // Match this to your '@/' alias path
+    // output   = "../generated/prisma/client" // Match this to your '@/' alias path
 
 }
 
