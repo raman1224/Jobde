@@ -7,8 +7,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
  const Navbar = dynamic(() => import("@/components/layout/navbar").then(mod => mod.Navbar))
  const Footer = dynamic(() => import("@/components/layout/footer").then(mod => mod.Footer))
- import dynamic from "next/dist/shared/lib/dynamic"
-
+import dynamic from "next/dynamic"
 const articles = [
   {
     title: "How to Write a Resume That Gets Noticed",

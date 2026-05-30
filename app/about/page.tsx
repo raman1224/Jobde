@@ -6,7 +6,7 @@ import { Users, Briefcase, Award, TrendingUp, Shield, Zap } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 const Navbar = dynamic(() => import("@/components/layout/navbar").then(mod => mod.Navbar))
 const Footer = dynamic(() => import("@/components/layout/footer").then(mod => mod.Footer))
-import dynamic from "next/dist/shared/lib/dynamic"
+import dynamic from "next/dynamic"
 const stats = [
   { value: "10K+", label: "Active Jobs", icon: Briefcase },
   { value: "50K+", label: "Job Seekers", icon: Users },

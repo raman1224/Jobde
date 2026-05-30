@@ -13,7 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Skeleton } from "@/components/ui/skeleton"
  const Navbar = dynamic(() => import("@/components/layout/navbar").then(mod => mod.Navbar))
  const Footer = dynamic(() => import("@/components/layout/footer").then(mod => mod.Footer))
- import dynamic from "next/dist/shared/lib/dynamic"
+import dynamic from "next/dynamic"
 interface Company {
   id: string
   name: string

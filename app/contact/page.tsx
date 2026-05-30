@@ -13,8 +13,7 @@ const Footer = dynamic(() => import("@/components/layout/footer").then(mod => mo
 const Toaster = dynamic(() => import("@/components/ui/toaster").then(mod => mod.Toaster))
 import { Card, CardContent } from "@/components/ui/card"
 import { toast } from "sonner"
-import dynamic from "next/dist/shared/lib/dynamic"
-
+import dynamic from "next/dynamic"
 export default function ContactPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
