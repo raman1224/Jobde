@@ -72,7 +72,6 @@
 // next.config.mjs - OPTIMIZED FOR PRODUCTION
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    output: "export",
   images: {
     domains: ['res.cloudinary.com', 'avatars.githubusercontent.com', 'lh3.googleusercontent.com'],
     formats: ['image/avif', 'image/webp'],
